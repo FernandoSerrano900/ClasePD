@@ -2,56 +2,80 @@
 #include <cstdlib>
 #include <ctime>
 
-std::string GenerateCupon(std::string UserCupon)
-{
+std::string GenerarCupon(std::string prefijo);
+std::string VerificarCupon(std::string cupon);
+std::string SolicitarDatos();
 
+int main()
+{
     srand(time(0));
-    int RandomNumber;
-    RandomNumber = rand() % 100 + 999;
-    
-    std::cout << "Su cupon es: " << UserCupon << RandomNumber << std::endl;
+
+    int cant_cupones = 0;
+    std::string gen_cupones[cant_cupones];
+
+    std::cout << "Ingrese la cantidad de cupones a generar: ";
+    std::cin >> cant_cupones;
+
+    for (size_t i = 0; i < cant_cupones; i++)
+    {
+        gen_cupones[i] = GenerarCupon(SolicitarDatos());
+    }
+
+    std::string prefijo = SolicitarDatos();
+    if (prefijo == "ERROR | Deben ser tres caracteres")
+    {
+        std::cout << prefijo << std::endl;
+        return 1;
+    }
+
+    std::string cupon_generado = GenerarCupon(prefijo);
+    std::cout << "El cupon generado es: " << cupon_generado << std::endl;
+
+    std::string resultado = VerificarCupon(cupon_generado);
+    std::cout << resultado << std::endl;
 
     return 0;
-
-
 }
 
+std::string GenerarCupon(std::string prefijo)
+{
+    int randomNum = rand() % 100 + 999; // Genera entre 999 y 1098
+    std::string conversion = std::to_string(randomNum);
+    return prefijo + conversion;
+}
 
-void VerificarCupon (std::string cupon){
-    //Extraer la parte numerica del cupon
+std::string VerificarCupon(std::string cupon)
+{
     std::string num_extraido = cupon.substr(3, 4);
-
-    //Convertir de entero a string
     int num_conversion = std::stoi(num_extraido);
 
-    //Validar si es par o no es par
-     if (num_conversion % 2)
+    if (num_conversion % 2)
     {
-        std::cout << "Es numero par";
-    } else
-    {
-        std::cout << "No es par";
+        return "No tiene premio";
     }
-    
+    else
+    {
+
+        return "Tiene premio";
+    }
 }
 
-int main ()
+std::string SolicitarDatos()
 {
-  
-    std::string UserCupon;
+    std::string prefijo;
+    std::cout << "Ingrese las letras del cupon: ";
+    std::cin >> prefijo;
 
     do
     {
-        std::cout << "Porfavor escribe el mes del cupon (Solo las primeras 3 letras de cada mes)." << std::endl;
-        std::cin >> UserCupon;
-    } while (UserCupon.length() == 0 || UserCupon.length() > 3);
-    
-
-    GenerateCupon(UserCupon);
-
-    VerificarCupon(UserCupon);
-    
-    
-    return 0;
+        
+        if (prefijo.length() != 3)
+        {
+            return "ERROR | Deben ser tres caracteres";
+        }
+        else
+        {
+            return prefijo;
+        }
+    } while (true);
 }
-
