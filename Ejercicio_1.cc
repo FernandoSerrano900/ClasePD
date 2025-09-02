@@ -49,6 +49,22 @@ void SolicitarDatosAlbum(Album &album){
     }
 }
 
+void ImprimirInformacionAlbum(const Album &album, const Artista &Artista){
+
+    //Imprimir datos album
+    std::cout << "Nombre del album: " << album.nombre_album << std::endl;
+    std::cout << "Anio de lanzamiento: " << album.ano_lanzamiento << std::endl;
+    std::cout << "canciones: " << std::endl;
+
+    for (const auto &cancion : album.canciones) {
+        std::cout << "  " << cancion.first << ". " << cancion.second << std::endl;
+    }
+
+    //Imprimir datos artista
+    std::cout << "Nombre del artista: " << Artista.nombre_artista << std::endl;
+    std::cout << "Nacionalidad del artista: " << Artista.nacionalidad << std::endl;
+
+}
 
 
 int main ()
@@ -59,7 +75,7 @@ int main ()
    Album album;
     SolicitarDatosAlbum(album);
 
-    
+    ImprimirInformacionAlbum(album, artista);
 
     return 0;
 }
