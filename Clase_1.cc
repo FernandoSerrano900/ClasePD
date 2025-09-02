@@ -1,81 +1,114 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
+#include <utility>
 
-std::string GenerarCupon(std::string prefijo);
-std::string VerificarCupon(std::string cupon);
+struct InformacionCupon
+{
+    int cantidad_cupones;
+    std::string nombre_persona;
+    std::vector<std::pair<std::string, std::string>> cupones_premio;
+};
+
 std::string SolicitarDatos();
+std::string GenerarCupon(std::string identificador_letras);
+std::string VerificarCupon(std::string cupon);
+
+struct InformacionCupon SolicitarDatosGenerales();
+
+void ImprimirInformacionCupon(const InformacionCupon &cupon);
 
 int main()
 {
     srand(time(0));
 
-    int cant_cupones = 0;
-    std::string gen_cupones[cant_cupones];
+    // Vector de tipo struct
+    std::vector<InformacionCupon> inf_cupones;
 
-    std::cout << "Ingrese la cantidad de cupones a generar: ";
-    std::cin >> cant_cupones;
+    // Almacenar el struct cupon en el vector
+    InformacionCupon cupon = SolicitarDatosGenerales();
+    inf_cupones.push_back(cupon);
 
-    for (size_t i = 0; i < cant_cupones; i++)
-    {
-        gen_cupones[i] = GenerarCupon(SolicitarDatos());
-    }
-
-    std::string prefijo = SolicitarDatos();
-    if (prefijo == "ERROR | Deben ser tres caracteres")
-    {
-        std::cout << prefijo << std::endl;
-        return 1;
-    }
-
-    std::string cupon_generado = GenerarCupon(prefijo);
-    std::cout << "El cupon generado es: " << cupon_generado << std::endl;
-
-    std::string resultado = VerificarCupon(cupon_generado);
-    std::cout << resultado << std::endl;
+    // Imprimir la información usando la función
+    ImprimirInformacionCupon(cupon);
 
     return 0;
 }
 
-std::string GenerarCupon(std::string prefijo)
+struct InformacionCupon SolicitarDatosGenerales()
 {
-    int randomNum = rand() % 100 + 999; // Genera entre 999 y 1098
-    std::string conversion = std::to_string(randomNum);
-    return prefijo + conversion;
-}
+    InformacionCupon cupon;
 
-std::string VerificarCupon(std::string cupon)
-{
-    std::string num_extraido = cupon.substr(3, 4);
-    int num_conversion = std::stoi(num_extraido);
+    // Solicitar la cantidad de cupones a generar
+    std::cout << "Ingresa cantidad de cupones a generar:\n";
+    std::cin >> cupon.cantidad_cupones;
 
-    if (num_conversion % 2)
+    std::cout << "Ingresa el nombre de la persona:\n";
+    std::cin >> cupon.nombre_persona;
+
+    for (int i = 0; i < cupon.cantidad_cupones; i++)
     {
-        return "No tiene premio";
+        std::string cupon_generado = GenerarCupon(SolicitarDatos());
+        std::string premio = VerificarCupon(cupon_generado);
+        cupon.cupones_premio.push_back(std::make_pair(cupon_generado, premio));
     }
-    else
-    {
 
-        return "Tiene premio";
-    }
+    return cupon;
 }
 
 std::string SolicitarDatos()
 {
     std::string prefijo;
-    std::cout << "Ingrese las letras del cupon: ";
-    std::cin >> prefijo;
 
     do
     {
-        
+        std::cout << "Ingrese las letras del cupon (3 letras):\n";
+        std::cin >> prefijo;
+
         if (prefijo.length() != 3)
         {
-            return "ERROR | Deben ser tres caracteres";
+            std::cout << "Error: Debe ingresar exactamente 3 letras.\n";
         }
         else
         {
             return prefijo;
         }
     } while (true);
+}
+
+std::string GenerarCupon(std::string identificador_letras)
+{
+    int numero_aleatorio = rand() % 9000 + 1000;
+    return identificador_letras + std::to_string(numero_aleatorio);
+}
+
+std::string VerificarCupon(std::string cupon)
+{
+    std::string mensaje;
+    std::string num_extraido = cupon.substr(3, 4);
+    int num_cupon = std::stoi(num_extraido);
+
+    if (num_cupon % 2 == 0)
+        mensaje = "Tiene premio";
+    else
+        mensaje = "No tiene premio";
+
+    return mensaje;
+}
+
+// Función para imprimir la información del cupon
+void ImprimirInformacionCupon(const InformacionCupon &cupon)
+{
+
+    // Solicitar nombre de la persona
+    std::cout << "\nNombre de la persona: " << cupon.nombre_persona << "\n";
+    // Solititar cantidad de cupones
+    std::cout << "Cantidad de cupones: " << cupon.cantidad_cupones << "\n\n";
+
+    for (const auto &c : cupon.cupones_premio)
+    {
+        std::cout << "Cupon generado: " << c.first
+                  << " | Premio: " << c.second << "\n";
+    }
 }
