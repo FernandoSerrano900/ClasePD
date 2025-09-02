@@ -32,6 +32,22 @@ void SolicitarDatosArtista(Artista &artista){
     std::cin >> artista.nacionalidad;
 }
 
+void SolicitarDatosAlbum(Album &album){
+
+    std::cout << "Ingrese el nombre del album: ";
+    std::cin >> album.nombre_album;
+    std::cout << "Ingrese el anio de lanzamiento del album: ";
+    std::cin >> album.ano_lanzamiento;
+    int cantidad_canciones;
+    std::cout << "Ingrese la cantidad de canciones del album: ";
+    std::cin >> cantidad_canciones;
+    for (int i = 0; i < cantidad_canciones; i++) {
+        std::string nombre_cancion;
+        std::cout << "Ingrese el nombre de la cancion " << (i + 1) << ": ";
+        std::cin >> nombre_cancion;
+        album.canciones.push_back(std::make_pair(i + 1, nombre_cancion));
+    }
+}
 
 
 
@@ -40,7 +56,10 @@ int main ()
     Artista artista;
     SolicitarDatosArtista(artista);
 
-   
+   Album album;
+    SolicitarDatosAlbum(album);
+
+    
 
     return 0;
 }
