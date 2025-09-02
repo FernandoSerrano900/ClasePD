@@ -51,9 +51,15 @@ void SolicitarDatosAlbum(Album &album){
 
 void ImprimirInformacionAlbum(const Album &album, const Artista &Artista){
 
+    //Anio actual
+    std::time_t t = std::time(nullptr);
+    std::tm* now = std::localtime(&t);
+    int anio_actual = now->tm_year + 1900;
+
     //Imprimir datos album
     std::cout << "Nombre del album: " << album.nombre_album << std::endl;
     std::cout << "Anio de lanzamiento: " << album.ano_lanzamiento << std::endl;
+    std::cout << "Edad del album: " << (anio_actual - album.ano_lanzamiento) << " anios" << std::endl;
     std::cout << "canciones: " << std::endl;
 
     for (const auto &cancion : album.canciones) {
